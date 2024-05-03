@@ -30,8 +30,80 @@
                         },
                         "port": {
                             "type": "long"
+                        }
+                    }
+                },
+                "source": {
+                    "properties": {
+                        "address": {
+                            "type": "ip",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
+                            }
                         },
-                        
+                        "port": {
+                            "type": "long"
+                        }
+                    }
+                },
+                "event": {
+                    "properties": {
+                        "date": {
+                            "type": "date"
+                        }
+                    }
+                },
+                "network": {
+                    "properties":{
+                        "bytes": {
+                            "type": "long"
+                        },
+                        "connection": {
+                            "properties": {
+                                "state": {
+                                    "type": "text"
+                                }
+                            }
+                        },
+                        "nat": {
+                            "properties": {
+                                "destination": {
+                                    "properties": {
+                                        "address": {
+                                            "type": "ip"
+                                        },
+                                        "port": {
+                                            "type": "long"
+                                        }
+                                    }
+                                },
+                                "source": {
+                                    "properties": {
+                                        "address": {
+                                            "type": "ip"
+                                        },
+                                        "port": {
+                                            "type": "long"
+                                        }
+                                    }
+                                },
+                                "translated": {
+                                    "properties": {
+                                        "address": {
+                                            "type": "ip"
+                                        },
+                                        "port": {
+                                            "type": "long"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "transport": {
+                            "type": "text"
+                        }
                     }
                 }
             }

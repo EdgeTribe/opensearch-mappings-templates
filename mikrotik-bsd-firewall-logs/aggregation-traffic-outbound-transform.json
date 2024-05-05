@@ -1,0 +1,70 @@
+{
+    "transform": {
+        "transform_id": "mikrotik-traffic-source",
+        "schema_version": 17,
+        "schedule": {
+            "interval": {
+                "start_time": 1714749471,
+                "period": 1,
+                "unit": "Minutes"
+            }
+        },
+        "enabled": true,
+        "description": "Aggregation of the total traffic for each source IP address in the outbound direction",
+        "source_index": "mikrotik-bsd-syslog-log*",
+        "data_selection_query": {
+             "bool": {
+                "must": [
+                    {
+                        "match_phrase": {
+                            "observer.egress.interface.name": "ether1"
+                        }
+                    },
+                    {
+                        "exists": {
+                            "field": "network.bytes"
+                        }
+                    }
+                ]
+            }
+        },
+        "target_index": "mikrotik-bsd-traffic-agg-local",
+        "page_size": 50,
+        "groups": [
+            {
+                "date_histogram": {
+                    "fixed_interval": "1m",
+                    "source_field": "@timestamp",
+                    "target_field": "@timestamp",
+                    "timezone": "UTC"
+                }
+            },
+            {
+                "terms": {
+                    "source_field": "source.address",
+                    "target_field": "ip"
+                }
+            },
+            {
+                "terms": {
+                    "source_field": "destination.port",
+                    "target_field": "port"
+                }
+            },
+            {
+                "terms": {
+                    "source_field": "observer.egress.interface.name",
+                    "target_field": "direction"
+                }
+            }
+        ],
+        "aggregations": {
+            "bytes": {
+                "sum": {
+                    "field": "network.bytes"
+                }
+            }
+        },
+        "continuous": true
+    }
+}
